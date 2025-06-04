@@ -7,13 +7,13 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
 # Run settings
-first_run = 32
-last_run = 47
+first_run = 24
+last_run = 55
 rows, cols = 8, 8
 
-data_dir = "/Users/sab/Desktop/Scriptie-Saban-Caliskan/VoorSaban2/20250321/DataMainSetup"
+data_dir = "/Users/sab/Desktop/Scriptie-Saban-Caliskan/VoorSaban2/20250320/DataMainSetup"
 output_pdf = os.path.join(
-    data_dir, f"all_runs_overview_with_largest_contour_and_Liu_plot_{first_run}-{last_run}_max_contrast_method.pdf"
+    data_dir, f"all_runs_overview_with_fitted_circle_and_Liu_plot_{first_run}-{last_run}_max_contrast_method.pdf"
 )
 
 # This function finds the square region with the highest contrast average difference to the average of the entire array.
@@ -120,7 +120,7 @@ def save_pdf(runs_data):
     with PdfPages(output_pdf) as pdf:
         for run, (data, thresh, thresh_pos, circles_list, circles_pos_list) in runs_data.items():
             fig, axes = plt.subplots(8, 8, figsize=(16, 16))
-            fig.suptitle(f"Run {run} Overview")
+            fig.suptitle(f"Run {run} Overview") #
 
             biggest_circles = [None] * 64
             for idx in range(64):
@@ -149,7 +149,7 @@ def save_pdf(runs_data):
 
             # Add Liu plot page
             fig2 = plot_liu(biggest_circles)
-            pdf.savefig(fig2)
+            pdf.savefig(fig2) #gebruik fig.adjust subplots. vspace and wspace
             plt.close(fig2)
 
     print(f"PDF saved to: {output_pdf}")

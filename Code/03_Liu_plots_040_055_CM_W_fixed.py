@@ -31,7 +31,7 @@ Nreps = Nruns // Ngroups
 
 # Settings
 exclude_indices = {0: [], 1: [], 2: [], 3: []}
-exclude_last_n_points = 3
+exclude_last_n_points = 0
 min_detections = 3  # min number of reps where a radius must be found
 max_points_per_group = 8  # Limit to first N non-zero points for fit and plot
 
@@ -39,10 +39,12 @@ max_points_per_group = 8  # Limit to first N non-zero points for fit and plot
 radii = np.zeros((Nruns, 64))
 counts = np.zeros((Nruns, 64))
 run_numbers = range(first_run, last_run + 1)
-for i in range(len(run_numbers)):
-    run = run_numbers[i]
-    radii[i] = np.load(os.path.join(datafolder, f'run_{str(run).zfill(3)}_radii.npy'))
-    counts[i] = np.load(os.path.join(datafolder, f'run_{str(run).zfill(3)}_counts.npy'))
+for i, run in enumerate(run_numbers):
+    radii_path = os.path.join(datafolder, f'run_{str(run).zfill(3)}_radii.npy')
+    counts_path = os.path.join(datafolder, f'run_{str(run).zfill(3)}_counts.npy')
+    radii_data = np.load(radii_path)
+    radii[i] = radii_data[:, 0]  # Take only the radius values
+    counts[i] = np.load(counts_path)
 
 # Convert units
 radii_sq = (pixel_resolution * radii) ** 2

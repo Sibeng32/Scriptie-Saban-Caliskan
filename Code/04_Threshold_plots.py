@@ -41,7 +41,7 @@ for i, (material_name, file_path) in enumerate(materials):
 
         # Plot error bars separately for visibility
         plt.errorbar(
-            pulse_durations, thresholds, yerr=visible_stds*10,
+            pulse_durations, thresholds, yerr=visible_stds,
             fmt='none', ecolor=colors[i], capsize=4, alpha=0.9, linewidth=1.5
         )
 
