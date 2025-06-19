@@ -5,8 +5,8 @@ import skimage.measure
 import cv2
 
 # Define input and output paths
-data_dir = "/Users/sab/Desktop/Scriptie-Saban-Caliskan/VoorSaban2/20250320/DataMainSetup"
-save_dir = "/Users/sab/Desktop/Scriptie-Saban-Caliskan/Contrast_Method/Radii/20250320"
+data_dir = "/Users/sab/Documents/GitHub/Scriptie-Saban-Caliskan/VoorSaban2/20250320/DataMainSetup"
+save_dir = "/Users/sab/Documents/GitHub/Scriptie-Saban-Caliskan/Radii/20250320"
 os.makedirs(save_dir, exist_ok=True)
 
 # Define range of runs

@@ -5,10 +5,10 @@ from matplotlib.backends.backend_pdf import PdfPages
 import scipy.ndimage as ndimage
 
 # Paths
-radii_dir = "/Users/sab/Desktop/Scriptie-Saban-Caliskan/Contrast_Method/Radii/20250320"
-image_dir = "/Users/sab/Desktop/Scriptie-Saban-Caliskan/VoorSaban2/20250321/DataMainSetup"
-first_run = 24
-last_run = 55
+radii_dir = "/Users/sab/Documents/GitHub/Scriptie-Saban-Caliskan/Radii/20250321"
+image_dir = "/Users/sab/Documents/GitHub/Scriptie-Saban-Caliskan/VoorSaban2/20250321/DataMainSetup"
+first_run = 32
+last_run = 47
 
 output_pdf = os.path.join(radii_dir, f"liu_and_circles_run_{first_run}-{last_run}.pdf")
 
@@ -41,26 +41,32 @@ def plot_liu_from_radii(radii_with_coords, run):
     return fig
 
 def plot_circles_on_images(data, radii_with_coords, run):
-    smoothed_data = np.array([ndimage.gaussian_filter(img, 2) for img in data])
+    rows, cols = 8, 8
+    sm = np.array([ndimage.gaussian_filter(img, 2) for img in data])
 
-    fig, axs = plt.subplots(8, 8, figsize=(16, 16))
-    fig.suptitle(f"Detected Circles for Run {run}", fontsize=16, fontweight='bold')
+    # Index mapping for meander or regular scan (left-to-right, top-to-bottom)
+    idx_x, idx_y = np.meshgrid(range(cols), range(rows))
+    idx_x = idx_x.flatten()
+    idx_y = idx_y.flatten()
 
-    for idx in range(64):
-        ax = axs[idx // 8, idx % 8]
-        ax.imshow(smoothed_data[idx], cmap='gray')
-        ax.axis('off')
+    fig, axs = plt.subplots(rows, cols)
+    fig.set_size_inches(5, 5)  # Adjust as needed for your paper layout
 
-        radius, cx, cy = radii_with_coords[idx]
-        if radius == 0:
-            continue
+    for i in range(len(sm)):
+        r, cx, cy = radii_with_coords[i]
+        ax = axs[idx_y[i], idx_x[i]]
+        ax.imshow(sm[i], cmap='gray', interpolation='none')
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_aspect('equal')
+        if r > 0:
+            circle = plt.Circle((cy, cx), r, color='r', fill=False, linewidth=1)
+            ax.add_patch(circle)
 
-        circle = plt.Circle((cy, cx), radius, color='r', fill=False, linewidth=1)
-        ax.add_patch(circle)
-
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    print(run)
+    # Tight layout with no space between subplots
+    plt.subplots_adjust(left=0.01, right=0.99, top=0.99, bottom=0.01, wspace=0, hspace=0)
     return fig
+
 
 # Generate PDF
 with PdfPages(output_pdf) as pdf:
